@@ -2,7 +2,9 @@
 
 {% block content %}
 
-<div class="col-10 shadow p-3 mb-5 bg-body rounded">
+<div class="col-10 shadow p-3 mb-5 bg-body rounded justify-content-center">
+  <h1>Dispositivos</h1>
+  <p>Seleccione un dispositivo</p>
   <ul class="nav nav-tabs nav-pills nav-fill mb-4" id="category-buttons" role="tablist">
     {% for category in categories %}
     <li class="nav-item" role="presentation">
@@ -18,7 +20,16 @@
 
   <div class="tab-content" id="pills-tabContent">
     <div class="tab-pane fade show active" id="{{category}}" role="tabpanel" aria-labelledby="{{category}}-tab">
-      {% include 'capturas.html' %}
+      <a class="row hover-zoom mx-auto pt-2 pb-2 text-decoration-none link-light bg-primary justify-content-center" data-bs-toggle="collapse" href="#capturasCollapse" role="button" aria-expanded="true" aria-controls="capturasCollapse">Capturas</a>
+      <div class="col collapse multi-collapse" id="capturasCollapse">
+        {% include 'capturas.html' %}
+      </div>
+
+
+      <a class="row hover-zoom mx-auto pt-2 pb-2 text-decoration-none link-light bg-info justify-content-center" data-bs-toggle="collapse" href="#videosCollapse" aria-expanded="true" aria-controls="videosCollapse">Videos</a>
+      <div class="col collapse multi-collapse" id="videosCollapse">
+        {% include 'videos.html' %}
+      </div>
     </div>
   </div>
 </div>

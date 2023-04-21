@@ -7,10 +7,12 @@
         <div class="col">
             <div class="card shadow-sm p-3 mb-5 bg-body rounded">
                 <img src="{{row.FilePath}}" class="card-img-top" alt="{{row.FilePath}}" href="{{row.FilePath}}">
-                <div class="card-body">
+                <div class="card-body lh-1 bg-light">
+                    <p class="lh-1 fw-light fs-6">Dispositivo: </p>
                     <h5 class="card-title badge bg-primary">{{ row['Label'] }}</h5>
-                    <hr>
+                    <p class="lh-1 fw-light fs-6">Id: </p>
                     <span class="badge rounded-pill bg-info text-dark">{{ row['DeviceID'] }}</span>
+                    <p class="lh-1 fw-light fs-6">Fecha y hora</p>
                     <p class="card-subtitle badge rounded-pill bg-secondary">{{ row['LocalTimeStamp'] }}</p>
                     
                     
