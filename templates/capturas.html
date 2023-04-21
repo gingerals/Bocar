@@ -1,0 +1,25 @@
+
+
+{% block content %}
+<div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3 justify-content-center">
+    
+    {% for row in results %}
+        <div class="col">
+            <div class="card shadow-sm p-3 mb-5 bg-body rounded">
+                <img src="{{row.FilePath}}" class="card-img-top" alt="{{row.FilePath}}" href="{{row.FilePath}}">
+                <div class="card-body">
+                    <h5 class="card-title badge bg-primary">{{ row['Label'] }}</h5>
+                    <hr>
+                    <span class="badge rounded-pill bg-info text-dark">{{ row['DeviceID'] }}</span>
+                    <p class="card-subtitle badge rounded-pill bg-secondary">{{ row['LocalTimeStamp'] }}</p>
+                    
+                    
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}
+
