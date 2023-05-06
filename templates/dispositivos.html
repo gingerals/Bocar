@@ -5,21 +5,21 @@
 <div class="col-10 shadow p-3 mb-5 bg-body rounded justify-content-center">
   <h1>Dispositivos</h1>
   <p>Seleccione un dispositivo</p>
-  <ul class="nav nav-tabs nav-pills nav-fill mb-4" id="category-buttons" role="tablist">
-    {% for category in categories %}
+  <ul class="nav nav-tabs nav-pills nav-fill mb-4" id="device-buttons" role="tablist">
+    {% for device in devices %}
     <li class="nav-item" role="presentation">
-      <a class="nav-link {% if active_category == category %}active{% endif %}" href="/dispositivos/{{category}}"
-        value="{{category}}" aria-selected="'true' if active_category == category else 'false'">{{category}}</a>
+      <a class="nav-link {% if active_device == device %}active{% endif %}" href="/dispositivos/{{device}}"
+        value="{{device}}" aria-selected="'true' if active_device == device else 'false'">{{device}}</a>
     </li>
     {% endfor %}
 
     <li class="nav-item">
-      <a class="nav-link {% if not active_category %}active{% endif %}" href="/dispositivos" tabindex="-1">Todos</a>
+      <a class="nav-link {% if not active_device %}active{% endif %}" href="/dispositivos" tabindex="-1">Todos</a>
     </li>
   </ul>
 
   <div class="tab-content" id="pills-tabContent">
-    <div class="tab-pane fade show active" id="{{category}}" role="tabpanel" aria-labelledby="{{category}}-tab">
+    <div class="tab-pane fade show active" id="{{device}}" role="tabpanel" aria-labelledby="{{device}}-tab">
       <a class="row hover-zoom mx-auto pt-2 pb-2 text-decoration-none link-light bg-primary justify-content-center" data-bs-toggle="collapse" href="#capturasCollapse" role="button" aria-expanded="true" aria-controls="capturasCollapse">Capturas</a>
       <div class="col collapse multi-collapse" id="capturasCollapse">
         {% include 'capturas.html' %}

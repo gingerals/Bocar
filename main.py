@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, redirect, url_for
 import jinja2
 import database
 from session import Session 
+from report import getDailyReport
 
 
 # Set up Jinja2 template engine
@@ -22,17 +23,25 @@ def home():
     authenticated = session.is_authenticated
     return render_template('home.html', user=user, state=state, authenticated=authenticated) 
 
-@app.route('/dispositivos/<category>')
+@app.route('/dispositivos/<device>')
 @app.route('/dispositivos')
-def dispositivos(category=None):
+def dispositivos(device=None):
     if not session.is_authenticated:
         return redirect(url_for('login'))
     else:
-        categories, results = database.db(category)
-        active_category = category
+        devices, results = database.db(device)
+        active_device = device
 
-        return render_template('dispositivos.html', categories=categories, results=results, active_category=active_category, authenticated=session.is_authenticated)
+        for device in devices:
+            for row in results:
+                playerID = row[1]
+            break
+        daily_report= getDailyReport(playerID)
+        
 
+        return render_template('dispositivos.html', devices=devices, results=results, active_device=active_device, authenticated=session.is_authenticated, playerID=playerID, daily_report=daily_report)
+    
+    
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

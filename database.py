@@ -5,7 +5,7 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 # Connecct to the database and get the latest 5 SS from every device
-def db(category=None):
+def db(device=None):
     # Connect to SQL Server and execute query
     conn = pyodbc.connect('DRIVER={SQL Server};SERVER=192.168.2.101;DATABASE=BSNEE;UID=bocar;PWD=oUdIslenDiMA')        
     cursor = conn.cursor()
@@ -34,10 +34,10 @@ def db(category=None):
     SELECT UnitName FROM CTE WHERE Capturas <= 1
     ''')
 
-    categories = [row[0] for row in cursor.fetchall()]
+    devices = [row[0] for row in cursor.fetchall()]
 
     # Construct the sql query based on the selected devices
-    if category:
+    if device:
         # query to get the last 5 ss from each device within the NetworkID 19
         sql = f'''
             ;WITH CTE
@@ -56,7 +56,7 @@ def db(category=None):
                 ON
                     Devices.DeviceID = DeviceScreenShots.DeviceID
                 WHERE 
-                    Devices.NetworkID = 19 AND UnitName = '{category}'
+                    Devices.NetworkID = 19 AND UnitName = '{device}'
             )
 
             SELECT * FROM CTE WHERE Capturas <= 5
@@ -98,4 +98,4 @@ def db(category=None):
     conn.close()
 
     # Render the about template with query result inside the index template
-    return categories, results
+    return devices, results
