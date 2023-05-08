@@ -2,72 +2,90 @@ from flask import Flask, request, render_template, redirect, url_for
 import jinja2
 import database
 from session import Session 
-from report import getDailyReport
+from report import getDailyReportURL
+from videos import getDailyReportTable
 
-
-# Set up Jinja2 template engine
+# Configuración del motor de plantillas Jinja2
 env = jinja2.Environment(loader=jinja2.FileSystemLoader('templates'))
 
+# Crear objeto sesión
 session = Session()
 
-# Define the Flask application
+# Crear aplicación Flask
 app = Flask(__name__)
+
+# Clave secreta de la aplicación
 app.secret_key = 'bocarkey'
+
+# Configuración de usuarios autorizados
 app.config['USERS'] = {'admin': '123bocar'}
 
-
+# Ruta de la página principal
 @app.route('/')
 def home():
+    # Obtener el usuario y estado de la URL
     user = request.args.get('user')
     state = request.args.get('state')
+    # Verificar si el usuario está autenticado
     authenticated = session.is_authenticated
+    # Renderizar la plantilla home.html
     return render_template('home.html', user=user, state=state, authenticated=authenticated) 
 
+# Rutas de dispositivos
 @app.route('/dispositivos/<device>')
 @app.route('/dispositivos')
 def dispositivos(device=None):
+    # Verificar si el usuario está autenticado
     if not session.is_authenticated:
         return redirect(url_for('login'))
     else:
-        devices, results = database.db(device)
+        # Obtener los dispositivos y resultados de la base de datos
+        devices, results = database.getSS(device)
+        # Establecer el dispositivo activo
         active_device = device
 
+        # Obtener el playerID para generar el reporte diario
         for device in devices:
             for row in results:
                 playerID = row[1]
             break
-        daily_report= getDailyReport(playerID)
-        
+        # Obtener la URL del reporte diario y la tabla de resultados
+        url_report = getDailyReportURL(playerID)
+        report_table = getDailyReportTable(url_report)
 
-        return render_template('dispositivos.html', devices=devices, results=results, active_device=active_device, authenticated=session.is_authenticated, playerID=playerID, daily_report=daily_report)
+        # Renderizar la plantilla dispositivos.html
+        return render_template('dispositivos.html', devices=devices, results=results, active_device=active_device, authenticated=session.is_authenticated, playerID=playerID, report_table=report_table)
     
-    
-
+# Ruta de inicio de sesión
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
+        # Obtener el nombre de usuario y la contraseña ingresados
         username = request.form.get('username')
         password = request.form.get('password')
+        # Verificar si el usuario y la contraseña son correctos
         if app.config['USERS'].get(username) != password:
             error = 'Usuario o contraseña incorrectos'
         else:
-            session.print_session()
-
+            # Iniciar sesión y redirigir a la página principal
             session.login(username)
             return redirect(url_for('home'))
-    return render_template('auth.html', error=error, authenticated= session.is_authenticated)
+    # Renderizar la plantilla auth.html
+    return render_template('auth.html', error=error, authenticated=session.is_authenticated)
 
+# Ruta de cierre de sesión
 @app.route('/logout')
 def logout():
+    # Cerrar sesión y redirigir a la página principal
     session.logout()
     return redirect(url_for('home'))
 
+# Función que inyecta el objeto sesión en las plantillas
 @app.context_processor
 def inject_session():
     return dict(session=session)
 
-
-# Start the Flask server
+# Iniciar la aplicación Flask
 if __name__ == '__main__':
     app.run()

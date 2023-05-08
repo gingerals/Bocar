@@ -4,13 +4,13 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
-# Connecct to the database and get the latest 5 SS from every device
-def db(device=None):
-    # Connect to SQL Server and execute query
+# Conectarse a la base de datos y obtener las ultimas 5 capturas de cada dispositivo
+def getSS(device=None):
+    # Conectar a SQL Server y ejecutar la consulta
     conn = pyodbc.connect('DRIVER={SQL Server};SERVER=192.168.2.101;DATABASE=BSNEE;UID=bocar;PWD=oUdIslenDiMA')        
     cursor = conn.cursor()
 
-    # Get the list of available categories/UnitName
+    # Obtener la lista de categorías/UnitName disponibles
     cursor.execute('''
     ;WITH CTE
     AS(
@@ -36,9 +36,9 @@ def db(device=None):
 
     devices = [row[0] for row in cursor.fetchall()]
 
-    # Construct the sql query based on the selected devices
+    # Construir la consulta SQL basada en los dispositivos seleccionados
     if device:
-        # query to get the last 5 ss from each device within the NetworkID 19
+        # consulta para obtener las últimas 5 capturas de pantalla de cada dispositivo dentro del NetworkID 19
         sql = f'''
             ;WITH CTE
             AS(
@@ -84,18 +84,18 @@ def db(device=None):
 
             SELECT * FROM CTE WHERE Capturas <= 5
             '''
-   
+
     cursor.execute(sql)
     results = cursor.fetchall()
 
-    # Replace image_path with URL and filename
+    # Reemplazar image_path con URL y filename
     for row in results:
-        # Extract filename from image_path using regular expression
+        # Extraer filename de image_path utilizando expresiones regulares
         filename = re.search(r'[^\\/]+$', row.FilePath).group()
-        # Replace first part of image_path with URL
+        # Reemplazar la primera parte de image_path con la URL
         row.FilePath = 'http://storage.v16.mx/DeviceScreenShots/Public/' + row.Label + '/' + filename
 
     conn.close()
 
-    # Render the about template with query result inside the index template
+    # Renderizar el template about con los resultados de la consulta dentro del template index
     return devices, results

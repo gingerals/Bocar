@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
 from urllib.parse import urljoin
 
 def getSoup(url):
@@ -8,7 +7,7 @@ def getSoup(url):
     soup = BeautifulSoup(response.content, "html.parser")
     return soup
 
-def getDailyReport(playerID):
+def getDailyReportURL(playerID):
     # Se define una URL base a la que se le pasa el id del player que estamos buscando
     url_base = 'http://storage.v16.mx/DeviceLogs/Reports/{playerID}/BOCAR/playback/'.format(playerID=playerID)
 
@@ -33,7 +32,7 @@ def getDailyReport(playerID):
 
         # Si el enlace contiene "DailyReport.xml", se ha encontrado el archivo
         if "DailyReport.xml" in sublink:
-            mensaje = f"URL del DailyReport más reciente: {sublink}"
+            mensaje = sublink
         else:
              # Si el enlace no contiene el archivo, actualizamos el objeto soup
             soup = getSoup(sublink)
