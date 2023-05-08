@@ -1,45 +1,71 @@
 {% block content %}
 <div class="row justify-content-center">
-    
-    
-    <table class="col-9">
-        <thead>
-          <tr>
-            {% for column in report_table.columns %}
-              <th>{{ column }}</th>
-            {% endfor %}
-          </tr>
-        </thead>
-        <tbody>
-          {% for row in report_table.values %}
-            <tr>
-              {% for value in row %}
-                <td>{{ value }}</td>
-              {% endfor %}
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
 
-      {% for row in results %}
-      <div class="col">
-          <div class="card shadow-sm p-3 mb-5 bg-body rounded">
-              <img src="{{row.FilePath}}" class="card-img-top" alt="{{row.FilePath}}" href="{{row.FilePath}}">
-              <div class="card-body lh-1 bg-light">
-                  <p class="lh-1 fw-light fs-6">Dispositivo: </p>
-                  <h5 class="card-title badge bg-primary">{{ row['Label'] }}</h5>
-                  <p class="lh-1 fw-light fs-6">Id: </p>
-                  <span class="badge rounded-pill bg-info text-dark">{{ row['DeviceID'] }}</span>
-                  <p class="lh-1 fw-light fs-6">Fecha y hora</p>
-                  <p class="card-subtitle badge rounded-pill bg-secondary">{{ row['LocalTimeStamp'] }}</p>
-                  
-                  
+
+
+
+    {% for filename, file_data in report_table.groupby('File Name') %}
+    <div class="card mb-3">
+        <div class="card-header">
+            {{ filename|replace('.mp4', '') }}
+            <br>
+            <a class="btn btn-primary" role="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ filename|replace('.mp4', '') }}" aria-expanded="true" aria-controls="collapse-{{ filename|replace('.mp4', '') }}">
+            Ver horas de reproducción
+            </a>
+        </div>
+        <div class="card-body">           
+            <div class="collapse" id="collapse-{{ filename|replace('.mp4', '') }}">
+                <div class="card card-body">
+                    <table>
+                        <thead>
+                          <tr>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for index, row in file_data.iterrows() %}
+                            <tr>
+                              <td>{{ row['Start Time (GMT-6)'] }}</td>
+                              <td>{{ row['Start Time (GMT-6)'] }}</td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                      
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+
+
+
+
+    <!--div class="row">
+        {% for row in report_table.values %}
+          <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm p-3 mb-5 bg-body rounded">
+              <div class="card-body">
+
+                <p class="lh-1 fw-light fs-6">Nombre: </p>
+                <h5 class="card-title badge bg-primary">{{ row[4] }}</h5>
+                <p class="lh-1 fw-light fs-6">Inició:</p>
+                <p class="card-subtitle badge rounded-pill bg-secondary">{{ row[1] }}</p>
+                <p class="lh-1 fw-light fs-6">Terminó:</p>
+                <p class="card-subtitle badge rounded-pill bg-secondary">{{ row[1] }}</p>
+                
               </div>
+            </div>
           </div>
-      </div>
-  {% endfor %}
+        {% endfor %}
+      </div-->
 
-      
+
+
+
 
 
 </div>

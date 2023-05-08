@@ -5,6 +5,7 @@ from session import Session
 from report import getDailyReportURL
 from videos import getDailyReportTable
 
+
 # Configuración del motor de plantillas Jinja2
 env = jinja2.Environment(loader=jinja2.FileSystemLoader('templates'))
 
