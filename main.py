@@ -1,10 +1,10 @@
 from flask import Flask, request, render_template, redirect, url_for
+import pandas as pd
 import jinja2
 import database
 from session import Session 
 from report import getDailyReportURL
 from videos import getDailyReportTable
-
 
 # Configuración del motor de plantillas Jinja2
 env = jinja2.Environment(loader=jinja2.FileSystemLoader('templates'))
@@ -54,8 +54,21 @@ def dispositivos(device=None):
         url_report = getDailyReportURL(playerID)
         report_table = getDailyReportTable(url_report)
 
+        if report_table is not None:
+            # se agrupan los datos 
+            grouped_data = report_table.groupby('File Name')
+            print(grouped_data)
+        else:
+            grouped_data = ""
+
+        # Se obtienen los tokens de cada video
+        video_tokens = {}
+        for filename, file_data in grouped_data:
+            video_tokens[filename] = database.getVideos(filename)[0][1]
+
+
         # Renderizar la plantilla dispositivos.html
-        return render_template('dispositivos.html', devices=devices, results=results, active_device=active_device, authenticated=session.is_authenticated, playerID=playerID, report_table=report_table)
+        return render_template('dispositivos.html', devices=devices, results=results, active_device=active_device, authenticated=session.is_authenticated, playerID=playerID, report_table=grouped_data, video_tokens=video_tokens)
     
 # Ruta de inicio de sesión
 @app.route('/login', methods=['GET', 'POST'])

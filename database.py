@@ -99,3 +99,32 @@ def getSS(device=None):
 
     # Renderizar el template about con los resultados de la consulta dentro del template index
     return devices, results
+
+def getVideos(fileName):
+    # Conectar a SQL Server y ejecutar la consulta
+    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=192.168.2.101;DATABASE=BSNEE;UID=bocar;PWD=oUdIslenDiMA')        
+    cursor = conn.cursor()
+
+    # Consultamos el token del video seleccionado
+
+    sql = f'''
+    SELECT
+        [FileName],
+        [UploadToken]
+
+    FROM 
+        [BSNEE].[dbo].[Content]
+    WHERE 
+        Type = 4
+    AND 
+        NetworkID = 19
+    AND 
+        FileName = '{fileName}'
+    '''
+
+    cursor.execute(sql)
+    resultados = cursor.fetchall()
+
+    conn.close()
+    
+    return resultados
