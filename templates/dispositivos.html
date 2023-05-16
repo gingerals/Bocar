@@ -2,39 +2,56 @@
 
 {% block content %}
 
+
+
 <div class="col-11 shadow p-3 mb-5 bg-body rounded justify-content-center">
   <h1>Dispositivos</h1>
   <p>Seleccione un dispositivo</p>
-  <ul class="nav nav-tabs nav-pills nav-fill mb-4" id="device-buttons" role="tablist">
-    {% for device in devices %}
-    <li class="col-4 nav-item" role="presentation">
-      <a class="nav-link {% if active_device == device %}active{% endif %}" href="/dispositivos/{{device}}"
-        value="{{device}}" aria-selected="'true' if active_device == device else 'false'">{{device}}</a>
-    </li>
-    {% endfor %}
-
-    <li class="nav-item">
-      <a class="nav-link {% if not active_device %}active{% endif %}" href="/dispositivos" tabindex="-1">Todos</a>
-    </li>
-  </ul>
+  
+  <div class="form-group mb-5 shadow-sm">
+    <select class="custom-select form-select form-select-lg text-center fw-bold" id="device-select">
+      {% set devices_sorted = devices | sort %}
+      {% for device in devices_sorted %}
+      <option value="{{ device }}" {% if active_device == device %}selected{% endif %}>{{ device }}</option>
+      {% endfor %}
+      <option value="todos" {% if not active_device %}selected{% endif %}>Todos</option>
+    </select>
+  </div>
 
   <div class="tab-content" id="pills-tabContent">
-    <div class="tab-pane fade show active" id="{{device}}" role="tabpanel" aria-labelledby="{{device}}-tab">
+    {% for device in devices %}
+    <div class="tab-pane fade {% if active_device == device %}show active{% endif %}" id="{{ device }}" role="tabpanel" aria-labelledby="{{ device }}-tab">
       
-      
-      <a class="row hover-zoom mx-auto py-2 text-decoration-none link-light bg-primary justify-content-center" data-bs-toggle="collapse" href="#capturasCollapse" role="button" aria-expanded="false" aria-controls="capturasCollapse">Capturas</a>
-      <div class="col collapse multi-collapse" id="capturasCollapse">
+      <a class="row hover-zoom mx-auto py-2 text-decoration-none link-light bg-primary justify-content-center" data-bs-toggle="collapse" href="#capturasCollapse-{{ device }}" role="button" aria-expanded="false" aria-controls="capturasCollapse-{{ device }}">Capturas</a>
+      <div class="col collapse multi-collapse" id="capturasCollapse-{{ device }}">
         {% include 'capturas.html' %}
       </div>
 
-
-      <a class="row hover-zoom mx-auto pt-2 pb-2 text-decoration-none link-light bg-info justify-content-center" data-bs-toggle="collapse" href="#videosCollapse" aria-expanded="false" aria-controls="videosCollapse">Videos</a>
-      <div class="col collapse multi-collapse" id="videosCollapse">
+      <a class="row hover-zoom mx-auto pt-2 pb-2 text-decoration-none link-light bg-info justify-content-center" data-bs-toggle="collapse" href="#videosCollapse-{{ device }}" aria-expanded="false" aria-controls="videosCollapse-{{ device }}">Videos</a>
+      <div class="col collapse multi-collapse" id="videosCollapse-{{ device }}">
         {% include 'videos.html' %}
       </div>
       
     </div>
+    {% endfor %}
   </div>
 </div>
+
+
+<style>
+  .custom-select {
+    background-color: #e9ecef;
+    color: #333333;
+    border: 0px solid #20c997;
+    border-radius: 4px;
+    padding: 8px;
+  }
+
+  .custom-select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+</style>
 
 {% endblock %}
