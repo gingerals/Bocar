@@ -7,7 +7,7 @@
   <p>Seleccione un dispositivo</p>
   <ul class="nav nav-tabs nav-pills nav-fill mb-4" id="device-buttons" role="tablist">
     {% for device in devices %}
-    <li class="nav-item" role="presentation">
+    <li class="col-4 nav-item" role="presentation">
       <a class="nav-link {% if active_device == device %}active{% endif %}" href="/dispositivos/{{device}}"
         value="{{device}}" aria-selected="'true' if active_device == device else 'false'">{{device}}</a>
     </li>
@@ -22,7 +22,7 @@
     <div class="tab-pane fade show active" id="{{device}}" role="tabpanel" aria-labelledby="{{device}}-tab">
       
       
-      <a class="row hover-zoom mx-auto pt-2 pb-2 text-decoration-none link-light bg-primary justify-content-center" data-bs-toggle="collapse" href="#capturasCollapse" role="button" aria-expanded="false" aria-controls="capturasCollapse">Capturas</a>
+      <a class="row hover-zoom mx-auto py-2 text-decoration-none link-light bg-primary justify-content-center" data-bs-toggle="collapse" href="#capturasCollapse" role="button" aria-expanded="false" aria-controls="capturasCollapse">Capturas</a>
       <div class="col collapse multi-collapse" id="capturasCollapse">
         {% include 'capturas.html' %}
       </div>

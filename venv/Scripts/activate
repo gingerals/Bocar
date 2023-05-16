@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\Alejandro Loera\Documents\Proyectos\bocar-flask\venv"
+VIRTUAL_ENV="C:\Users\Alejandro Loera\OneDrive - SSL Digital SA de CV\Proyectos\bocar-flask\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

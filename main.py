@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, redirect, url_for
 import pandas as pd
 import jinja2
 import database
-from session import Session 
+from session import Session
 from report import getDailyReportURL
 from videos import getDailyReportTable
 
@@ -22,6 +22,8 @@ app.secret_key = 'bocarkey'
 app.config['USERS'] = {'admin': '123bocar'}
 
 # Ruta de la página principal
+
+
 @app.route('/')
 def home():
     # Obtener el usuario y estado de la URL
@@ -30,9 +32,11 @@ def home():
     # Verificar si el usuario está autenticado
     authenticated = session.is_authenticated
     # Renderizar la plantilla home.html
-    return render_template('home.html', user=user, state=state, authenticated=authenticated) 
+    return render_template('home.html', user=user, state=state, authenticated=authenticated)
 
 # Rutas de dispositivos
+
+
 @app.route('/dispositivos/<device>')
 @app.route('/dispositivos')
 def dispositivos(device=None):
@@ -42,6 +46,7 @@ def dispositivos(device=None):
     else:
         # Obtener los dispositivos y resultados de la base de datos
         devices, results = database.getSS(device)
+        print(f'Dispositivos:\n {devices}')
         # Establecer el dispositivo activo
         active_device = device
 
@@ -55,7 +60,7 @@ def dispositivos(device=None):
         report_table = getDailyReportTable(url_report)
 
         if report_table is not None:
-            # se agrupan los datos 
+            # se agrupan los datos
             grouped_data = report_table.groupby('File Name')
             print(grouped_data)
         else:
@@ -63,14 +68,21 @@ def dispositivos(device=None):
 
         # Se obtienen los tokens de cada video
         video_tokens = {}
-        for filename, file_data in grouped_data:
-            video_tokens[filename] = database.getVideos(filename)[0][1]
 
+
+        for filename, file_data in grouped_data:
+            videos = database.getVideos(filename)
+            if videos:
+                video_tokens[filename] = videos[0][1]
+            else:
+                video_tokens[filename] = "No disponible"
 
         # Renderizar la plantilla dispositivos.html
         return render_template('dispositivos.html', devices=devices, results=results, active_device=active_device, authenticated=session.is_authenticated, playerID=playerID, report_table=grouped_data, video_tokens=video_tokens)
-    
+
 # Ruta de inicio de sesión
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
@@ -89,6 +101,8 @@ def login():
     return render_template('auth.html', error=error, authenticated=session.is_authenticated)
 
 # Ruta de cierre de sesión
+
+
 @app.route('/logout')
 def logout():
     # Cerrar sesión y redirigir a la página principal
@@ -96,9 +110,12 @@ def logout():
     return redirect(url_for('home'))
 
 # Función que inyecta el objeto sesión en las plantillas
+
+
 @app.context_processor
 def inject_session():
     return dict(session=session)
+
 
 # Iniciar la aplicación Flask
 if __name__ == '__main__':
