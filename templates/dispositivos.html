@@ -3,55 +3,33 @@
 {% block content %}
 
 
-
 <div class="col-11 shadow p-3 mb-5 bg-body rounded justify-content-center">
   <h1>Dispositivos</h1>
   <p>Seleccione un dispositivo</p>
-  
-  <div class="form-group mb-5 shadow-sm">
-    <select class="custom-select form-select form-select-lg text-center fw-bold" id="device-select">
-      {% set devices_sorted = devices | sort %}
-      {% for device in devices_sorted %}
-      <option value="{{ device }}" {% if active_device == device %}selected{% endif %}>{{ device }}</option>
+
+  <div class="form-group">
+    <select class="form-select form-select-lg shadow mb-5 fw-semibold text-center" id="device-select">
+      {% for device in devices %}
+        <option {% if active_device == device %}selected{% endif %}>{{ device }}</option>
       {% endfor %}
-      <option value="todos" {% if not active_device %}selected{% endif %}>Todos</option>
+      <option {% if not active_device %}selected{% endif %}>Todos</option>
     </select>
   </div>
 
   <div class="tab-content" id="pills-tabContent">
-    {% for device in devices %}
-    <div class="tab-pane fade {% if active_device == device %}show active{% endif %}" id="{{ device }}" role="tabpanel" aria-labelledby="{{ device }}-tab">
-      
-      <a class="row hover-zoom mx-auto py-2 text-decoration-none link-light bg-primary justify-content-center" data-bs-toggle="collapse" href="#capturasCollapse-{{ device }}" role="button" aria-expanded="false" aria-controls="capturasCollapse-{{ device }}">Capturas</a>
-      <div class="col collapse multi-collapse" id="capturasCollapse-{{ device }}">
+    <div class="tab-pane fade show active" id="{{ device }}" role="tabpanel" aria-labelledby="{{ device }}-tab">
+      <a class="row hover-zoom mx-auto py-2 text-decoration-none link-light bg-primary justify-content-center" data-bs-toggle="collapse" href="#capturasCollapse" role="button" aria-expanded="false" aria-controls="capturasCollapse">Capturas</a>
+      <div class="col collapse multi-collapse" id="capturasCollapse">
         {% include 'capturas.html' %}
       </div>
 
-      <a class="row hover-zoom mx-auto pt-2 pb-2 text-decoration-none link-light bg-info justify-content-center" data-bs-toggle="collapse" href="#videosCollapse-{{ device }}" aria-expanded="false" aria-controls="videosCollapse-{{ device }}">Videos</a>
-      <div class="col collapse multi-collapse" id="videosCollapse-{{ device }}">
+      <a class="row hover-zoom mx-auto pt-2 pb-2 text-decoration-none link-light bg-info justify-content-center" data-bs-toggle="collapse" href="#videosCollapse" aria-expanded="false" aria-controls="videosCollapse">Videos</a>
+      <div class="col collapse multi-collapse" id="videosCollapse">
         {% include 'videos.html' %}
       </div>
-      
     </div>
-    {% endfor %}
   </div>
 </div>
 
-
-<style>
-  .custom-select {
-    background-color: #e9ecef;
-    color: #333333;
-    border: 0px solid #20c997;
-    border-radius: 4px;
-    padding: 8px;
-  }
-
-  .custom-select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-  }
-</style>
 
 {% endblock %}
