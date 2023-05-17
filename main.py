@@ -46,7 +46,6 @@ def dispositivos(device=None):
     else:
         # Obtener los dispositivos y resultados de la base de datos
         devices, results = database.getSS(device)
-        print(f'Dispositivos:\n {devices}')
         # Establecer el dispositivo activo
         active_device = device
 
@@ -77,8 +76,29 @@ def dispositivos(device=None):
             else:
                 video_tokens[filename] = "No disponible"
 
+        # Ignoramos algunos de los dispositivos
+        ignorar = ['DERECHO', 'IZQUIERDO', 'BCR']
+
+
+        # Mapeo de los nombres de dispositivos a cambiar
+        renombrar = {
+            'SAN LUIS RECLUTAMIENTO': 'San Luis Potosí',
+            'SLP COMEDOR': 'SLP Comedor',
+            'CENTRO DE INGENIERIA': 'C.D.I. BOCAR',
+            'QUERETARO': 'AUMA Tec',
+            'FUGRA-LERMA': 'Lerma | Fugra',
+            'PLASTITEC-LERMA': ' Lerma | Plastic Tec',
+            'PRESION-LERMA': ' Lerma | Presión',
+            'COYOACAN': 'Coyoacán',
+            'PERISUR-IZQUIERDO': 'Perisur | IZQ',
+            'PERISUR-DERECHO': 'Perisur | DER',
+            'SALTILLO': 'Saltillo | 1',
+            'SALTILLO DOS': 'Saltillo | 2'
+        }
+
+
         # Renderizar la plantilla dispositivos.html
-        return render_template('dispositivos.html', devices=devices, results=results, active_device=active_device, authenticated=session.is_authenticated, playerID=playerID, report_table=grouped_data, video_tokens=video_tokens)
+        return render_template('dispositivos.html', devices=devices, results=results, active_device=active_device, authenticated=session.is_authenticated, playerID=playerID, report_table=grouped_data, video_tokens=video_tokens, ignorar=ignorar, renombrar=renombrar)
 
 # Ruta de inicio de sesión
 
