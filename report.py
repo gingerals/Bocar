@@ -21,9 +21,6 @@ def es_enlace_numero(enlace):
 
 
 def obtener_fecha_anterior(soup, url_base):
-    """
-    Obtiene la fecha del DailyReport más reciente de un directorio
-    """
     enlaces = soup.find_all("a")
     enlaces_numericos = [enlace for enlace in enlaces if es_enlace_numero(enlace)]
     if not enlaces_numericos:
@@ -37,8 +34,6 @@ def obtener_fecha_anterior(soup, url_base):
     
     return fecha, soup_fecha
 
-
-
 def getDailyReportURL(playerID):
     print('\nComenzando búsqueda\n\n')
     url_base = f'http://storage.v16.mx/DeviceLogs/Reports/{playerID}/BOCAR/playback/'
@@ -46,18 +41,16 @@ def getDailyReportURL(playerID):
     mensaje = "No se ha podido encontrar el archivo"
     
     fecha_actual, soup_actual = obtener_fecha_anterior(soup, url_base)
-    while fecha_actual is not None:
+    while fecha_actual is not None and soup_actual is not None:
         url_fecha_actual = urljoin(url_base, fecha_actual)
         fecha_actual_soup = obtener_fecha_anterior(soup_actual, url_fecha_actual)
-        if fecha_actual_soup is None:
+        if fecha_actual_soup[0] is None or fecha_actual_soup[1] is None:
             break
         fecha_actual, soup_actual = fecha_actual_soup
         if fecha_actual is not None:
             print(f"\nAvanzando a la fecha {fecha_actual}")
     
     if soup_actual is None:
-        # Manejar la situación en la que no se pudo obtener el soup actual
-        # Puedes devolver un mensaje de error o realizar alguna acción apropiada
         return "No se ha podido obtener el archivo"
     
     enlaces = soup_actual.find_all("a")
