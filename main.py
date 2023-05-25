@@ -61,7 +61,6 @@ def dispositivos(device=None):
         if report_table is not None:
             # se agrupan los datos
             grouped_data = report_table.groupby('File Name')
-            print(grouped_data)
         else:
             grouped_data = ""
 
