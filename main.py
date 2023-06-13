@@ -21,8 +21,6 @@ app.secret_key = 'bocarkey'
 # Configuración de usuarios autorizados
 app.config['USERS'] = {'admin': '123bocar'}
 
-# Ruta de la página principal
-
 
 @app.route('/')
 def home():
