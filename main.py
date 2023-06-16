@@ -19,7 +19,11 @@ app = Flask(__name__)
 app.secret_key = 'bocarkey'
 
 # Configuración de usuarios autorizados
-app.config['USERS'] = {'admin': '123bocar'}
+app.config['USERS'] = {
+    'admin': '123bocar',
+    'jessica.olvera@bocar.com': 'antarectar',
+    'eduardo.islas@bocar.com': 'nitzelagen'
+    }
 
 
 @app.route('/')
@@ -136,4 +140,4 @@ def inject_session():
 
 # Iniciar la aplicación Flask
 if __name__ == '__main__':
-    app.run()
+    app.run( host="0.0.0.0", port=5001)
